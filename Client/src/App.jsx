@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Routes,Route, BrowserRouter} from 'react-router
 const Home = lazy(()=> import('./Pages/Home'))
 const Login = lazy(()=> import('./Pages/Login'))
 const Chat= lazy(()=> import('./Pages/Chat'))
+const Groupes= lazy(()=> import('./Pages/Groups'))
 
 
 
@@ -13,7 +14,8 @@ function App() {
 <Routes>
   <Route path = '/' element ={<Home/>}/>
   <Route path = '/login' element ={<Login/>}/>
-  <Route path = '/login' element ={<Chat/>}/>
+  <Route path = '/groupes' element ={<Groupes/>}/>
+  <Route path = '/chat/:chatId' element ={<Chat/>}/>
 <Route/>
   
 </Routes>
