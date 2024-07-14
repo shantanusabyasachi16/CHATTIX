@@ -10,11 +10,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { Upload } from "react-feather"; // Importing Upload icon from react-feather
+import { Upload } from "react-feather";
+import { useInputValidation } from "6pp";
+import { usernameValidator } from "@/utils/validator";
+import { Typography } from "antd";
 
-export default function Auth() {
+export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [profilePic, setProfilePic] = useState(null);
+
+  const Name = useInputValidation("");
+  const username = useInputValidation("", usernameValidator);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -30,7 +36,9 @@ export default function Auth() {
             {isLogin ? "Login" : "Register"}
           </CardTitle>
           <CardDescription>
-            {isLogin ? "Enter your email below to login to your account." : "Enter your details below to create a new account."}
+            {isLogin
+              ? "Enter your email below to login to your account."
+              : "Enter your details below to create a new account."}
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
@@ -42,7 +50,9 @@ export default function Auth() {
                   alt="Profile"
                   className="w-24 h-24 rounded-full object-cover"
                 />
-                <label htmlFor="profilePic" className="absolute bottom-0 right-0 bg-gray-800 p-2 rounded-full cursor-pointer">
+                <label
+                  htmlFor="profilePic"
+                  className="absolute bottom-0 right-0 bg-gray-800 p-2 rounded-full cursor-pointer">
                   <Upload color="white" size={16} />
                   <input
                     id="profilePic"
@@ -55,22 +65,40 @@ export default function Auth() {
               </div>
             </div>
           )}
-          {!isLogin && (
-            <div className="grid gap-4">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" type="text" placeholder="name" required />
-            </div>
-          )}
+          <div className="grid gap-2">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              type="text"
+              placeholder="name"
+              required
+              value={Name.value}
+              onChange={Name.changeHandler}
+            />
+          </div>
           {!isLogin && (
             <div className="grid gap-2">
               <Label htmlFor="bio">Bio</Label>
               <Input id="bio" type="text" placeholder="Tell us about yourself" required />
             </div>
           )}
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" placeholder="email" required />
-          </div>
+          {!isLogin && (
+            <div className="grid gap-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="username"
+                value={username.value}
+                onChange={username.changeHandler}
+              />
+              {username.error && (
+                <Typography.Text type="danger">
+                  {username.error}
+                </Typography.Text>
+              )}
+            </div>
+          )}
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
             <Input id="password" type="password" placeholder="password" required />
@@ -78,7 +106,12 @@ export default function Auth() {
           {!isLogin && (
             <div className="grid gap-2">
               <Label htmlFor="confirm-password">Confirm Password</Label>
-              <Input id="confirm-password" type="password" placeholder="confirm password" required />
+              <Input
+                id="confirm-password"
+                type="password"
+                placeholder="confirm password"
+                required
+              />
             </div>
           )}
         </CardContent>
@@ -88,7 +121,9 @@ export default function Auth() {
             className="w-full"
             variant="outline"
             onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? "Don't have an account? Register" : "Already have an account? Login"}
+            {isLogin
+              ? "Don't have an account? Register"
+              : "Already have an account? Login"}
           </Button>
         </CardFooter>
       </Card>
