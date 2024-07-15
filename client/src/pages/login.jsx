@@ -11,13 +11,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Upload } from "react-feather";
-import { useInputValidation } from "6pp";
-import { usernameValidator } from "@/utils/validator";
-import { Typography } from "antd";
+import { useInputValidation, useStrongPassword } from "6pp";
+import { usernameValidator } from "@/utils/validators";
+import { Typography } from "@mui/material";
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [profilePic, setProfilePic] = useState(null);
+
+  const password = useStrongPassword(); // Using useStrongPassword hook
 
   const Name = useInputValidation("");
   const username = useInputValidation("", usernameValidator);
@@ -33,9 +35,9 @@ export default function Login() {
       <Card className="w-full max-w-sm md:max-w-md lg:max-w-lg">
         <CardHeader>
           <CardTitle className="text-2xl flex justify-center items-center">
-            {isLogin ? "Login" : "Register"}
+            {isLogin ? "Login" : "Signup"}
           </CardTitle>
-          <CardDescription>
+          <CardDescription className=" flex justify-center items-center">
             {isLogin
               ? "Enter your email below to login to your account."
               : "Enter your details below to create a new account."}
@@ -89,20 +91,33 @@ export default function Login() {
                 id="username"
                 type="text"
                 placeholder="username"
+                required
                 value={username.value}
                 onChange={username.changeHandler}
               />
               {username.error && (
-                <Typography.Text type="danger">
+                <p className="text-red-500">
                   {username.error}
-                </Typography.Text>
+                </p>
               )}
             </div>
           )}
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" placeholder="password" required />
+            <Input
+              id="password"
+              type="password"
+              placeholder="password"
+              required
+              value={password.value}
+              onChange={password.changeHandler}
+            />
           </div>
+          {password.error && (
+            <Typography color="error" variant="caption">
+              {password.error}
+            </Typography>
+          )}
           {!isLogin && (
             <div className="grid gap-2">
               <Label htmlFor="confirm-password">Confirm Password</Label>
@@ -116,14 +131,12 @@ export default function Login() {
           )}
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <Button className="w-full">{isLogin ? "Sign in" : "Register"}</Button>
+          <Button className="w-full">{isLogin ? "Sign in" : "Signup"}</Button>
           <Button
             className="w-full"
             variant="outline"
             onClick={() => setIsLogin(!isLogin)}>
-            {isLogin
-              ? "Don't have an account? Register"
-              : "Already have an account? Login"}
+            {isLogin ? "Don't have an account? Register" : "Already have an account? Login"}
           </Button>
         </CardFooter>
       </Card>
